@@ -122,7 +122,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   } else if (request.params.name === "search_youtube_videos") {
     try {
       const { query, max_results = 10 } = request.params.arguments as { query: string; max_results?: number };
-      
+
       const tempDir = fs.mkdtempSync(`${os.tmpdir()}${path.sep}youtube-search-`);
       const output = await spawnPromise(
         "yt-dlp",
@@ -136,7 +136,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       );
 
       rimraf.sync(tempDir);
-      
+
       return {
         content: [
           {
@@ -159,59 +159,58 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   } else if (request.params.name === "get_screenshot") {
     try {
       const { url, timestamp } = request.params.arguments as { url: string; timestamp: string };
-      
+
       const tempDir = fs.mkdtempSync(`${os.tmpdir()}${path.sep}youtube-screenshot-`);
       
-      // Convert timestamp to seconds for yt-dlp
-      const [hours, minutes, seconds] = timestamp.split(':').map(Number);
-      const secondsTotal = hours * 3600 + minutes * 60 + seconds;
-      
-      const output = await spawnPromise(
+      // First download the video to the temp directory
+      await spawnPromise(
         "yt-dlp",
         [
           url,
-          "--get-thumbnail",
-          "--thumbnail-format",
-          "jpg",
-          "--thumbnail-quality",
-          "100",
-          "--no-playlist",
-          "--force-overwrites",
-          "--no-check-certificates",
-          "--extract-audio",
-          "--audio-format",
-          "mp3",
-          "--audio-quality",
-          "0",
-          "--write-thumbnail",
-          "--write-info-json",
-          "--skip-download",
           "--output",
-          path.join(tempDir, "thumbnail"),
+          path.join(tempDir, "video.%(ext)s"),
+          "--format",
+          "best[height<=720]", // Limit resolution to avoid large downloads
+          "--no-playlist",
         ],
         { cwd: tempDir }
       );
-
-      // Find the generated thumbnail file
+      
+      // Find the downloaded video file
       const files = fs.readdirSync(tempDir);
-      const thumbnailFile = files.find(file => file.endsWith('.jpg'));
+      const videoFile = files.find(file => !file.endsWith('.jpg') && !file.endsWith('.json'));
       
-      if (!thumbnailFile) {
-        throw new Error("No thumbnail was generated");
+      if (!videoFile) {
+        throw new Error("No video was downloaded");
       }
-
-      // Read the thumbnail file as base64
-      const thumbnailPath = path.join(tempDir, thumbnailFile);
-      const thumbnailBuffer = fs.readFileSync(thumbnailPath);
-      const thumbnailBase64 = thumbnailBuffer.toString('base64');
-
-      rimraf.sync(tempDir);
       
+      const videoPath = path.join(tempDir, videoFile);
+      const screenshotPath = path.join(tempDir, "screenshot.jpg");
+      
+      // Use ffmpeg to extract a frame at the specified timestamp
+      await spawnPromise(
+        "ffmpeg",
+        [
+          "-ss", timestamp,
+          "-i", videoPath,
+          "-vframes", "1",
+          "-q:v", "2",
+          screenshotPath
+        ],
+        { cwd: tempDir }
+      );
+      
+      // Read the screenshot file as base64
+      const screenshotBuffer = fs.readFileSync(screenshotPath);
+      const screenshotBase64 = screenshotBuffer.toString('base64');
+      
+      rimraf.sync(tempDir);
+
       return {
         content: [
           {
             type: "text",
-            text: `data:image/jpeg;base64,${thumbnailBase64}`,
+            text: `data:image/jpeg;base64,${screenshotBase64}`,
           },
         ],
       };

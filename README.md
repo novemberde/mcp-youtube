@@ -4,9 +4,9 @@ Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai vi
 
 ### How do I get this working?
 
-1. Install `yt-dlp` (Homebrew and WinGet both work great here)
+1. Install `yt-dlp` and `ffmpeg` (Homebrew and WinGet both work great here)
    ```bash
-   brew install yt-dlp
+   brew install yt-dlp ffmpeg
    ```
 2. Install the MCP YouTube tool:
    ```bash
@@ -71,5 +71,6 @@ Gets a screenshot of a YouTube video at a specific timestamp.
 
 ### Notes
 - All tools require `yt-dlp` to be installed on your system
+- The `get_screenshot` tool requires `ffmpeg` to be installed on your system
 - The server uses temporary directories for processing, which are automatically cleaned up after use
 - Error handling is implemented for all tools with descriptive error messages
