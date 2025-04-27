@@ -1,16 +1,17 @@
 {
-  "name": "@anaisbetts/mcp-youtube",
-  "version": "0.6.0",
+  "name": "@novemberde/mcp-youtube",
+  "version": "0.8.0",
   "bin": {
-    "mcp-youtube": "lib/index.mjs"
+    "mcp-youtube": "./dist/index.js"
   },
   "description": "YouTube downloader for MCP",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "git clean -xdf dist && bun build --target node src/index.ts --outdir dist",
-    "test": "bun test"
+    "test": "bun test",
+    "publish": "bun run prepublish && npm publish --access public"
   },
-  "author": "Ani Betts <anais@anaisbetts.org>",
+  "author": "kyuhyun byun",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.6.0",
