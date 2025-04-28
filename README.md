@@ -8,10 +8,10 @@ Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai vi
    ```bash
    brew install yt-dlp ffmpeg
    ```
-2. Install the MCP YouTube tool:
-   ```bash
-   npm install -g @novemberde/mcp-youtube
-   ```
+2. Install the MCP CLI and connect it to Claude:
+  ```bash
+  npx -y @smithery/cli install @novemberde/mcp-youtube --client claude
+  ```
 
 ### Available Tools
 

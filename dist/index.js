@@ -21884,7 +21884,7 @@ ${cleanedContent}`;
           screenshotPath
         ], { cwd: tempDir });
       }
-      rimraf.sync(tempDir);
+      fs2.unlinkSync(videoPath);
       return {
         content: [
           {

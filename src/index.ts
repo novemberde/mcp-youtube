@@ -202,7 +202,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           { cwd: tempDir }
         );
       }
-      rimraf.sync(tempDir);
+      
+      // Remove only the video file, keep the screenshots
+      fs.unlinkSync(videoPath);
 
       return {
         content: [
