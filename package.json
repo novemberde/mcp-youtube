@@ -8,6 +8,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "git clean -xdf dist && bun build --target node src/index.ts --outdir dist",
+    "build": "bun build --target node src/index.ts --outdir dist",
     "test": "bun test",
     "publish": "bun run prepublish && npm publish --access public"
   },

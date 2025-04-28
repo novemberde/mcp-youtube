@@ -10,6 +10,6 @@ RUN npm install --ignore-scripts
 
 COPY . .
 
-RUN npm run prepublish
+RUN npm run build
 
 CMD [ "node", "dist/index.js" ]
