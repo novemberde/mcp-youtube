@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+RUN npm install -g bun
+
 RUN npm install --ignore-scripts
 
 COPY . .
