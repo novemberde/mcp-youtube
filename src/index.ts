@@ -53,15 +53,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "get_screenshot",
+        name: "get_screenshots",
         description: "Get a screenshot of a YouTube video at a specific timestamp",
         inputSchema: {
           type: "object",
           properties: {
-            url: { type: "string", description: "URL of the YouTube video" },
-            timestamp: { type: "string", description: "Timestamp in HH:MM:SS format (e.g. '01:30:45')" },
+            url: { type: "string", description: "URL of the YouTube video" }, 
+            timestamps: { type: "array", description: "Array of timestamps in HH:MM:SS format (e.g. ['01:30:45', '02:45:15'])", items: { type: "string" } },
           },
-          required: ["url", "timestamp"],
+          required: ["url", "timestamps"],
         },
       },
     ],
@@ -156,9 +156,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         isError: true,
       };
     }
-  } else if (request.params.name === "get_screenshot") {
+  } else if (request.params.name === "get_screenshots") {
     try {
-      const { url, timestamp } = request.params.arguments as { url: string; timestamp: string };
+      const { url, timestamps } = request.params.arguments as { url: string; timestamps: string[] };
 
       const tempDir = fs.mkdtempSync(`${os.tmpdir()}${path.sep}youtube-screenshot-`);
       
@@ -185,32 +185,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
       
       const videoPath = path.join(tempDir, videoFile);
-      const screenshotPath = path.join(tempDir, "screenshot.jpg");
+      const screenshotPaths = timestamps.map(timestamp => path.join(tempDir, `${timestamp}.jpg`));
       
       // Use ffmpeg to extract a frame at the specified timestamp
-      await spawnPromise(
-        "ffmpeg",
-        [
-          "-ss", timestamp,
-          "-i", videoPath,
-          "-vframes", "1",
-          "-q:v", "2",
-          screenshotPath
-        ],
-        { cwd: tempDir }
-      );
-      
-      // Read the screenshot file as base64
-      const screenshotBuffer = fs.readFileSync(screenshotPath);
-      const screenshotBase64 = screenshotBuffer.toString('base64');
-      
+      for (const timestamp of timestamps) {
+        const screenshotPath = screenshotPaths[timestamps.indexOf(timestamp)];
+        await spawnPromise(
+          "ffmpeg",
+          [
+            "-ss", timestamp,
+            "-i", videoPath,
+            "-vframes", "1",
+            "-q:v", "2",
+            screenshotPath
+          ],
+          { cwd: tempDir }
+        );
+      }
       rimraf.sync(tempDir);
 
       return {
         content: [
           {
             type: "text",
-            text: `data:image/jpeg;base64,${screenshotBase64}`,
+            text: `Screenshot saved to ${screenshotPaths.join(", ")}`,
           },
         ],
       };
