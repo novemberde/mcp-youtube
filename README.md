@@ -12,7 +12,20 @@ Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai vi
    ```
 2. Install the MCP CLI and connect it to Claude:
   ```bash
-  npx -y @smithery/cli install @novemberde/mcp-youtube --client claude
+  npm install -g @novemberde/mcp-youtube
+  ```
+3.  Add MCP on Claude Config
+  ```bash
+  {
+    "mcpServers": {
+      "mcp-youtube": {
+        "command": "npx",
+        "args": [
+          "@novemberde/mcp-youtube"
+        ]
+      }
+    }
+  }
   ```
 
 ### Available Tools
