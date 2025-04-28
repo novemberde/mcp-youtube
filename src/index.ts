@@ -54,7 +54,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_screenshots",
-        description: "Get a screenshot of a YouTube video at a specific timestamp",
+        description: "Get screenshots of a YouTube video at specific timestamps",
         inputSchema: {
           type: "object",
           properties: {
