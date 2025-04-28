@@ -1,6 +1,6 @@
 {
   "name": "@novemberde/mcp-youtube",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "bin": {
     "mcp-youtube": "./dist/index.js"
   },
@@ -10,7 +10,7 @@
     "prepublish": "git clean -xdf dist && bun build --target node src/index.ts --outdir dist",
     "build": "bun build --target node src/index.ts --outdir dist",
     "test": "bun test",
-    "publish": "bun run prepublish && npm publish --access public"
+    "publish": "npm run prepublish && npm publish --access public"
   },
   "author": "kyuhyun byun",
   "license": "MIT",
