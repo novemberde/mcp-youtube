@@ -1,8 +1,37 @@
 # YouTube MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@novemberde/mcp-youtube)](https://smithery.ai/server/@novemberde/mcp-youtube)
-
 This project connects YouTube video processing capabilities to Claude AI via the [Model Context Protocol](https://modelcontextprotocol.io/introduction). It uses `yt-dlp` for downloading subtitles and `ffmpeg` for screenshot extraction. Users can ask Claude to summarize YouTube videos by providing the URL.
+
+## System Architecture Diagram
+
+```mermaid
+graph TD
+    A[User] --> B[Claude AI]
+    B --> D[mcp-youtube]
+    D --> E[yt-dlp Subtitles]
+    D --> F[ffmpeg Screenshots]
+    D --> G[Temporary Storage]
+    G --> H[Auto-Cleanup]
+
+    style A fill:#FFE4B5,stroke:#333
+    style B fill:#98FB98,stroke:#333
+    style C fill:#ADD8E6,stroke:#333
+    style D fill:#D0ECE7,stroke:#333
+    style E fill:#FFB6C1,stroke:#333
+    style F fill:#DDA0DD,stroke:#333
+    style G fill:#FFFACD,stroke:#333
+    style H fill:#FFD700,stroke:#333
+
+    subgraph MCP
+        D --> E
+        D --> F
+        D --> G
+    end
+
+    subgraph Temporary Storage
+        G --> H
+    end
+```
 
 ## Getting Started
 
@@ -23,7 +52,7 @@ This project connects YouTube video processing capabilities to Claude AI via the
      "mcpServers": {
        "mcp-youtube": {
          "command": "npx",
-         "args": ["@november  de/mcp-youtube"]
+         "args": ["@novemberde/mcp-youtube"]
        }
      }
    }
