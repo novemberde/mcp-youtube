@@ -16,11 +16,15 @@ import { rimraf } from "rimraf";
 const server = new Server(
   {
     name: "mcp-youtube",
-    version: "0.8.0",
+    version: "0.8.1", // Bumped version number
   },
   {
     capabilities: {
-      tools: {},
+      tools: {
+        download_youtube_url: true,
+        search_youtube_videos: true,
+        get_screenshots: true,
+      },
     },
   }
 );

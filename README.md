@@ -2,55 +2,56 @@
 
 [![smithery badge](https://smithery.ai/badge/@novemberde/mcp-youtube)](https://smithery.ai/server/@novemberde/mcp-youtube)
 
-Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai via [Model Context Protocol](https://modelcontextprotocol.io/introduction). Try it by asking Claude, "Summarize the YouTube video <<URL>>". Requires `yt-dlp` and `ffmpeg` to be installed locally e.g. via Homebrew.
+This project connects YouTube video processing capabilities to Claude AI via the [Model Context Protocol](https://modelcontextprotocol.io/introduction). It uses `yt-dlp` for downloading subtitles and `ffmpeg` for screenshot extraction. Users can ask Claude to summarize YouTube videos by providing the URL.
 
-### How do I get this working?
+## Getting Started
 
-1. Install `yt-dlp` and `ffmpeg` (Homebrew and WinGet both work great here)
+### Prerequisites
+- `yt-dlp` and `ffmpeg` installed (via Homebrew, WinGet, or other package managers)
+- Node.js and npm installed
+
+### Installation
+1. Install the MCP server:
    ```bash
-   brew install yt-dlp ffmpeg
+   npm install -g @novemberde/mcp-youtube
    ```
-2. Install the MCP CLI and connect it to Claude:
-  ```bash
-  npm install -g @novemberde/mcp-youtube
-  ```
-3.  Add MCP on Claude Config
-  ```bash
-  {
-    "mcpServers": {
-      "mcp-youtube": {
-        "command": "npx",
-        "args": [
-          "@novemberde/mcp-youtube"
-        ]
-      }
-    }
-  }
-  ```
 
-### Available Tools
+2. Configure Claude to use the MCP server:
+   Add the following to your `claude_desktop_config.json`:
+   ```json
+   {
+     "mcpServers": {
+       "mcp-youtube": {
+         "command": "npx",
+         "args": ["@november  de/mcp-youtube"]
+       }
+     }
+   }
+   ```
 
-#### 1. download_youtube_url
+## Available Tools
+
+### 1. `download_youtube_url`
 Downloads and extracts subtitles from a YouTube video.
 
 **Parameters:**
-- `url` (required): The URL of the YouTube video
+- `url` (required): YouTube video URL
 
-**Example Usage:**
+**Example:**
 ```json
 {
   "url": "https://www.youtube.com/watch?v=example"
 }
 ```
 
-#### 2. search_youtube_videos
-Searches for YouTube videos using a query string.
+### 2. `search_youtube_videos`
+Searches YouTube videos based on a query.
 
 **Parameters:**
-- `query` (required): The search query string
-- `max_results` (optional): Maximum number of results to return (default: 10)
+- `query` (required): Search term
+- `max_results` (optional, default=10): Maximum number of results
 
-**Example Usage:**
+**Example:**
 ```json
 {
   "query": "how to make pizza",
@@ -59,21 +60,16 @@ Searches for YouTube videos using a query string.
 ```
 
 **Returns:**
-- Video title
-- URL
-- Description
-- Duration
-- View count
-- Uploader name
+- Video title, URL, description, duration, view count, uploader name
 
-#### 3. get_screenshots
-Gets screenshots of a YouTube video at specific timestamps.
+### 3. `get_screenshots`
+Captures screenshots from specific timestamps of a YouTube video.
 
 **Parameters:**
-- `url` (required): The URL of the YouTube video
-- `timestamps` (required): Array of timestamps in HH:MM:SS format (e.g., ["01:30:45", "02:45:15"])
+- `url` (required): YouTube video URL
+- `timestamps` (required): Array of timestamps in `HH:MM:SS` format
 
-**Example Usage:**
+**Example:**
 ```json
 {
   "url": "https://www.youtube.com/watch?v=example",
@@ -82,10 +78,20 @@ Gets screenshots of a YouTube video at specific timestamps.
 ```
 
 **Returns:**
-- The file paths where screenshots were saved
+- File paths to saved screenshots
 
-### Notes
-- All tools require `yt-dlp` to be installed on your system
-- The `get_screenshots` tool requires `ffmpeg` to be installed on your system
-- The server uses temporary directories for processing, which are automatically cleaned up after use
-- Error handling is implemented for all tools with descriptive error messages
+## Notes
+- Ensure `yt-dlp` and `ffmpeg` are installed globally.
+- The server uses temporary directories for processing, which are automatically cleaned up.
+- Error handling provides descriptive messages for troubleshooting.
+
+## Contributing
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Create a new Pull Request
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
