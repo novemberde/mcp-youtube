@@ -44,9 +44,12 @@ brew install yt-dlp ffmpeg
 
 ### Installation
 
-#### Executable via Node.js
+#### Executable via Node.js (Recommended)
 1. Install the MCP server:
    ```bash
+   brew install nvm
+   nvm install --lts
+   nvm use --lts
    npm install -g @novemberde/mcp-youtube
    ```
 
