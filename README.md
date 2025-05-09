@@ -15,7 +15,6 @@ graph TD
 
     style A fill:#FFE4B5,stroke:#333
     style B fill:#98FB98,stroke:#333
-    style C fill:#ADD8E6,stroke:#333
     style D fill:#D0ECE7,stroke:#333
     style E fill:#FFB6C1,stroke:#333
     style F fill:#DDA0DD,stroke:#333
