@@ -38,6 +38,10 @@ graph TD
 - `yt-dlp` and `ffmpeg` installed (via Homebrew, WinGet, or other package managers)
 - Node.js and npm installed
 
+```bash
+brew install yt-dlp ffmpeg
+```
+
 ### Installation
 1. Install the MCP server:
    ```bash

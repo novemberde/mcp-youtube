@@ -4,9 +4,13 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install -g bun
+RUN apk add --no-cache curl bash
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
 
 RUN npm install --ignore-scripts
+
+RUN apk add --no-cache yt-dlp ffmpeg
 
 COPY . .
 
