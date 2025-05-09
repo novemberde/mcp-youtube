@@ -16969,7 +16969,6 @@ class LRUCache {
   #max;
   #maxSize;
   #dispose;
-  #onInsert;
   #disposeAfter;
   #fetchMethod;
   #memoMethod;
@@ -17005,7 +17004,6 @@ class LRUCache {
   #hasDispose;
   #hasFetchMethod;
   #hasDisposeAfter;
-  #hasOnInsert;
   static unsafeExposeInternals(c) {
     return {
       starts: c.#starts,
@@ -17052,14 +17050,11 @@ class LRUCache {
   get dispose() {
     return this.#dispose;
   }
-  get onInsert() {
-    return this.#onInsert;
-  }
   get disposeAfter() {
     return this.#disposeAfter;
   }
   constructor(options) {
-    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, onInsert, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
+    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
     if (max !== 0 && !isPosInt(max)) {
       throw new TypeError("max option must be a nonnegative integer");
     }
@@ -17101,9 +17096,6 @@ class LRUCache {
     if (typeof dispose === "function") {
       this.#dispose = dispose;
     }
-    if (typeof onInsert === "function") {
-      this.#onInsert = onInsert;
-    }
     if (typeof disposeAfter === "function") {
       this.#disposeAfter = disposeAfter;
       this.#disposed = [];
@@ -17112,7 +17104,6 @@ class LRUCache {
       this.#disposed = undefined;
     }
     this.#hasDispose = !!this.#dispose;
-    this.#hasOnInsert = !!this.#onInsert;
     this.#hasDisposeAfter = !!this.#disposeAfter;
     this.noDisposeOnSet = !!noDisposeOnSet;
     this.noUpdateTTL = !!noUpdateTTL;
@@ -17489,9 +17480,6 @@ class LRUCache {
       if (status)
         status.set = "add";
       noUpdateTTL = false;
-      if (this.#hasOnInsert) {
-        this.#onInsert?.(v, k, "add");
-      }
     } else {
       this.#moveToTail(index);
       const oldVal = this.#valList[index];
@@ -17526,9 +17514,6 @@ class LRUCache {
         }
       } else if (status) {
         status.set = "update";
-      }
-      if (this.#hasOnInsert) {
-        this.onInsert?.(v, k, v === oldVal ? "update" : "replace");
       }
     }
     if (ttl !== 0 && !this.#ttls) {
@@ -21728,10 +21713,14 @@ rimraf.rimraf = rimraf;
 // src/index.ts
 var server = new Server({
   name: "mcp-youtube",
-  version: "0.8.0"
+  version: "0.8.1"
 }, {
   capabilities: {
-    tools: {}
+    tools: {
+      download_youtube_url: true,
+      search_youtube_videos: true,
+      get_screenshots: true
+    }
   }
 });
 server.setRequestHandler(ListToolsRequestSchema, async () => {
