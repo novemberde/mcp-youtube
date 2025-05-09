@@ -11,7 +11,7 @@
     "prepublish": "git clean -xdf dist && bun build --target node src/index.ts --outdir dist",
     "build": "bun build --target node src/index.ts --outdir dist",
     "test": "bun test",
-    "publish": "npm run prepublish && npm publish --access public"
+    "publish": "npm run prepublish && npm publish --access public && docker build -t novemberde/mcp-youtube . && docker push novemberde/mcp-youtube"
   },
   "author": "kyuhyun byun",
   "license": "MIT",

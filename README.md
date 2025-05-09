@@ -43,12 +43,15 @@ brew install yt-dlp ffmpeg
 ```
 
 ### Installation
+
+#### Executable via Node.js
 1. Install the MCP server:
    ```bash
    npm install -g @novemberde/mcp-youtube
    ```
 
 2. Configure Claude to use the MCP server:
+
    Add the following to your `claude_desktop_config.json`:
    ```json
    {
@@ -60,6 +63,26 @@ brew install yt-dlp ffmpeg
      }
    }
    ```
+
+#### Executable via Docker
+
+Prerequisites:
+- Docker installed
+
+Configure Claude to use the Docker container:
+
+```json
+{
+  "mcpServers": {
+    "mcp-youtube": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "novemberde/mcp-youtube"]
+    }
+  }
+}
+```
+
+
 
 ## Available Tools
 
@@ -116,6 +139,19 @@ Captures screenshots from specific timestamps of a YouTube video.
 - Ensure `yt-dlp` and `ffmpeg` are installed globally.
 - The server uses temporary directories for processing, which are automatically cleaned up.
 - Error handling provides descriptive messages for troubleshooting.
+
+## Docker
+
+```bash
+docker build -t novemberde/mcp-youtube .
+docker run -d -p 3000:3000 novemberde/mcp-youtube
+```
+
+### Push to Docker Hub
+
+```bash
+docker push novemberde/mcp-youtube
+```
 
 ## Contributing
 Contributions are welcome! Please:
